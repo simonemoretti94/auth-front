@@ -8,44 +8,60 @@ export default {
       base_api_url: 'http://127.0.0.1:8000',
       projects_endpoint: '/api/projects',
       projects: '',
+      search_text: '',
+    }
+  },
+  methods: {
+    callApi(url) {
+      axios
+        .get(url)
+        .then(response => {
+          console.log(response);
+          this.projects = response.data.results;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    search() {
+      const url = this.base_api_url + this.projects_endpoint + `?search=${this.search_text}`;
+      console.log('search URL: ', url);
+      this.callApi(url);
     }
   },
   mounted() {
     const url = this.base_api_url + this.projects_endpoint;
     console.log(url);
-    axios
-      .get(url)
-      .then(response => {
-        console.log(response);
-        this.projects = response.data.results;
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    this.callApi(url);
+
   }
 }
 </script>
 
 <template>
-  <h1 class="my-2">Projects:</h1>
+  <section class="container">
+    <h1 class="my-2">Projects:</h1>
 
-  <div class="p-5 mb-4 bg-light rounded-3">
-    <div class="container-fluid py-5">
-      <h1 class="display-5 fw-bold">Blog</h1>
-      <p class="col-md-8 fs-4">
-        Read our amazing blog
-      </p>
+    <div class="p-5 mb-4 bg-light rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Blog</h1>
+        <p class="col-md-8 fs-4">
+          Read our amazing blog
+        </p>
 
-      <div class="input-group mb-3">
-        <input type="search" class="form-control" placeholder="search...">
-        <button class="btn btn-outline-secondary" type="button">
-          <i class="fas fa-search fa-lg fa-fw"></i>
-        </button>
+        <form @submit.prevent="search()" action="">
+          <div class="input-group mb-3">
+            <input type="search" class="form-control" placeholder="search..." v-model="search_text">
+            <button class="btn btn-outline-secondary" type="submit">
+              <i class="fas fa-search fa-lg fa-fw"></i>
+            </button>
+          </div>
+        </form>
+
+
       </div>
-
-
     </div>
-  </div>
+  </section>
 
 
   <section v-if="projects">
