@@ -27,6 +27,10 @@ export default {
       const url = this.base_api_url + this.projects_endpoint + `?search=${this.search_text}`;
       console.log('search URL: ', url);
       this.callApi(url);
+    },
+    goTo(url) {
+      console.log('goTo URL: ', url);
+      this.callApi(url);
     }
   },
   mounted() {
@@ -78,12 +82,24 @@ export default {
             </template>
 
             <div class="card-body">
-              {{ project.description }}
+              <p><b>{{ project.title }}</b><br>
+                {{ project.description }}
+              </p>
             </div>
           </div>
         </div>
       </div>
+      <nav class="my-3" aria-label="Page navigation">
+        <ul class="pagination    ">
+          <li class="page-item" :class="{ 'd-none': !link.url, 'active': link.active }" v-for="link in projects.links">
+            <button class="page-link" :href="link.url" type="button" @click="goTo(link.url)">{{ link.label }}</button>
+          </li>
+        </ul>
+      </nav>
     </div>
+
+
+
   </section>
 
 </template>
